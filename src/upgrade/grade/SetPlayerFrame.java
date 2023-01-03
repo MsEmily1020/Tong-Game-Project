@@ -15,7 +15,8 @@ import javax.swing.JTextField;
 public class SetPlayerFrame extends CommonFrame {
 	JTextField textField = new JTextField();
 	
-	ArrayList<String> playerNameAdd = new ArrayList<String>();
+	public static ArrayList<String> playerNameAdd = new ArrayList<String>();
+	public static int playersNum;
 	
 	JButton playerAdd = new JButton("추가");
 	JButton playerCheck = new JButton("확인");
@@ -117,6 +118,7 @@ public class SetPlayerFrame extends CommonFrame {
 				gameStartButton.setVisible(true); //인원 수가 조건에 맞을 경우에만 게임 시작 버튼 보이게
 				JOptionPane.showMessageDialog(null, "확인되었습니다.");
 				Collections.shuffle(playerNameAdd); //배열 순서 무작위 돌리기
+				playersNum = playerNameAdd.size();
 			}
 		}
 	};

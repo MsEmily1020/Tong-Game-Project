@@ -38,9 +38,12 @@ public class TimerFrame extends CommonFrame {
 				dispose();
 				bell = Audio("./image/bell.wav", bell);
 				gameClip = Audio("./image/gameBgm.wav", gameClip);
+				dispose();
+				new GameStartFrame().setVisible(true);
 			}
 		};
 
 		time.schedule(task, 2400);
+		
 	}
 }
