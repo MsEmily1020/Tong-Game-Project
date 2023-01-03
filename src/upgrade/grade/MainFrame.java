@@ -16,6 +16,7 @@ public class MainFrame extends CommonFrame {
 		super(900, 900, "메인화면");
 		JButton startButton = new JButton("게임 시작");
 		JButton expButton = new JButton("게임 설명");
+		expButton.addActionListener(expListener);
 		JButton endButton = new JButton("게임 종료");
 		endButton.addActionListener(endListener);
 		
@@ -31,6 +32,14 @@ public class MainFrame extends CommonFrame {
 		titleClip = Audio("./image/titleClip.wav", titleClip);
 		titleClip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
+	
+	ActionListener expListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dispose();
+			new ExpFrame().setVisible(true);
+		}
+	};
 	
 	ActionListener endListener = new ActionListener() {
 		@Override
