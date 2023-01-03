@@ -15,6 +15,7 @@ public class MainFrame extends CommonFrame {
 	public MainFrame() {
 		super(900, 900, "메인화면");
 		JButton startButton = new JButton("게임 시작");
+		startButton.addActionListener(startListener);
 		JButton expButton = new JButton("게임 설명");
 		expButton.addActionListener(expListener);
 		JButton endButton = new JButton("게임 종료");
@@ -33,6 +34,16 @@ public class MainFrame extends CommonFrame {
 		titleClip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	
+	//플레이어 설정
+	ActionListener startListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dispose();
+			new SetPlayerFrame().setVisible(true);
+		}
+	};
+			
+	//게임 설명
 	ActionListener expListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -41,6 +52,7 @@ public class MainFrame extends CommonFrame {
 		}
 	};
 	
+	//게임 종료
 	ActionListener endListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
