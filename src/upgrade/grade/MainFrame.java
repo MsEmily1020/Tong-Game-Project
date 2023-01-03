@@ -9,7 +9,7 @@ import javax.swing.JButton;
 
 public class MainFrame extends CommonFrame {
 	Clip open;			   //https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
-	Clip titleClip;		   //https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
+	public static Clip titleClip;		   //https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
 	ImagePanel img = new ImagePanel(new ImageIcon("./image/title.jpg").getImage());
 	
 	public MainFrame() {

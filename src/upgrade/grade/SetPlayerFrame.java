@@ -164,7 +164,8 @@ public class SetPlayerFrame extends CommonFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			dispose();
+			new TimerFrame().setVisible(true);
 		}
 	};
 }
