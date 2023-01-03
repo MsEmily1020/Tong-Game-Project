@@ -11,7 +11,7 @@ public class TimerFrame extends CommonFrame {
 	Clip count;			   //https://youtubelab.tistory.com/34
 	Clip clickClip;        //https://pgtd.tistory.com/269
 	Clip bell;			   //https://pgtd.tistory.com/225
-	Clip gameClip;		   //https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
+	public static Clip gameClip;		   //https://pixabay.com/ko/music/search/genre/%EB%B9%84%EB%94%94%EC%98%A4%20%EA%B2%8C%EC%9E%84/
 	
 	public TimerFrame() {
 		super(900, 900, "");

@@ -3,14 +3,23 @@ package upgrade.grade;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class GameStartFrame extends CommonFrame {
+public class GameStartFrame extends CommonFrame implements ActionListener {
+	Clip penaltyClip;	   //https://drive.google.com/file/d/1lUNLybu6AJB06vplh5KbsvxEZMiubQU3/view
+	Clip cardClip;		   //https://drive.google.com/drive/folders/17FSmgq-mto_L5z-oYiyG83jzo8Ksiwt6
+	Clip clickClip;        //https://pgtd.tistory.com/269
+	
 	JButton mainButton = new JButton("메인으로");
 	JButton[] holeButtons = new JButton[24];
 	JButton[] playerButton;
@@ -20,8 +29,37 @@ public class GameStartFrame extends CommonFrame {
 
 	int holePenalty;
 	int start = 1;
-	
+
+	ImageIcon[] card = new ImageIcon[] { new ImageIcon("./image/red.jpg"), new ImageIcon("./image/blue.jpg"), new ImageIcon("./image/yellow.jpg"), new ImageIcon("./image/green.jpg") };
+
 	JPanel buttonPanel = new JPanel(new GridLayout(4, 6, 20, 20));
+	
+	String[] penalty = new String[] 
+			{ "생각하는 의지로 10초 버티기", 
+					"벌칙자:피리불기 왼쪽사람:뱀 역할극",
+					"모르는 사람한테 '나 이뻐?' 물어보기",
+					"칠판에 만세 따라그리기",
+					"눈물셀카찍기",
+					"개다리춤추기",
+					"곰 세마리 노래로 랩하기",
+					"모델걸음+무표정",
+					"대걸레잡고 섹시포즈",
+					"퉁퉁이 성대모사하기",
+					"담임선생님 허그하기",
+					"대걸레 잡고 노래부르기",
+					"복도에서 인어공주포즈",
+					"세번 절하기",
+					"플랭크 10초동안 하기",
+					"김연아의 트리플악셀",
+					"간지럼피기",
+					"코끼리코 10바퀴 돌고 앞에 사람보고 고백하기",
+					"빗자루로 기타치기",
+					"빗자루타고 '아이캔플라이'외치기",
+					"세일러문 등장 따라하기",
+					"다음 게임 흑기사 해주기",
+					"소원 하나씩 이루어주기",
+					"가마 태우기"
+			};
 	
 	public GameStartFrame() {
 		super(900, 900, "게임 시작");
@@ -63,13 +101,61 @@ public class GameStartFrame extends CommonFrame {
 		titleLabel.setIcon(new ImageIcon("./image/titleLabel.jpg"));
 
 		add(this.setBounds(buttonPanel, 0, 60, 900, 800, 0, 102, 0));
-
+		
+		Random rd = new Random();
+		holePenalty = rd.nextInt(24);
+		
 		for(int i = 0; i < 24; i++) {
 			holeButtons[i] = new JButton(""); //이미 선택한 구멍과 선택하지 않은 구멍 차이점 ('-' 유무)
 			buttonPanel.add(holeButtons[i]);
 			holeButtons[i].setFont(new Font("굴림", Font.BOLD, 100));
+			holeButtons[i].addActionListener(this); //해당 버튼 동작 이벤트
 		}
 
 		add(buttonPanel);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		for(int i = 0; i < holeButtons.length; i++)
+			if(e.getSource() == holeButtons[i]) //클릭한 값 갖고옴
+				if(holeButtons[i].getText() == "") {
+					cardClip = Audio("./image/card.wav", cardClip);
+					holeButtons[i].setText("-");
+					holeButtons[i].setIcon(card[start - 1]);
+					playerButton[start - 1].setBorder(new LineBorder(null));
+
+					//벌칙구멍과 선택한 구멍이 동일한 경우
+					if(holeButtons[i] == holeButtons[holePenalty]) {
+						TimerFrame.gameClip.close();
+						penaltyClip = Audio("./image/penalty.wav", penaltyClip);
+						for(int j = 0; j < playerButton.length; j++) playerButton[j].setVisible(false);
+						JOptionPane.showMessageDialog(null, penalty[holePenalty] + "을(를) 수행해주세요.");
+						for(int j = 0; j < 24; j++) holeButtons[j].setVisible(false);
+						//https://heaven0713.tistory.com/28 (라벨 \n 사용하기)
+						penaltyLabel.setVisible(true);
+						penaltyLabel.setText(("<html><body><center>" + SetPlayerFrame.playerNameAdd.get(start - 1) + "님은 오늘의 주인공! <br><br>" + penalty[holePenalty] + "을(를) 수행해주세요.</center></body></html>"));
+						titleLabel.setBounds(0, 0, 900, 900);
+						mainButton.setVisible(true);
+						mainButton.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								clickClip = Audio("./image/click.wav", clickClip);
+								dispose();
+								MainFrame frame = new MainFrame();
+								frame.setAudio();
+								frame.setVisible(true);
+							}
+						});
+						titleLabel.setIcon(new ImageIcon("./image/win.jpg"));
+						break;
+					}
+
+					else
+						if(start != SetPlayerFrame.playersNum) { playerButton[start].setBorder(new LineBorder(Color.black, 7)); start++; } //마지막 순서가 아닐 경우
+						else { playerButton[0].setBorder(new LineBorder(Color.black, 7)); start = 1; } //마지막 순서일 경우
+				} //이미 선택한 구멍과 선택하지 않은 구멍 차이점 ('-' 유무)
+	}
+	
+	
 }
