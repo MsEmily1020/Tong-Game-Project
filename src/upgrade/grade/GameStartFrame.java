@@ -5,6 +5,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.sound.sampled.Clip;
@@ -19,10 +24,12 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 	Clip penaltyClip;	   //https://drive.google.com/file/d/1lUNLybu6AJB06vplh5KbsvxEZMiubQU3/view
 	Clip cardClip;		   //https://drive.google.com/drive/folders/17FSmgq-mto_L5z-oYiyG83jzo8Ksiwt6
 	Clip clickClip;        //https://pgtd.tistory.com/269
-	
+
 	JButton mainButton = new JButton("메인으로");
 	JButton[] holeButtons = new JButton[24];
 	JButton[] playerButton;
+
+	ArrayList<String> penaltyArr = new ArrayList<String>();
 
 	JLabel titleLabel = new JLabel();
 	JLabel penaltyLabel = new JLabel();
@@ -33,38 +40,11 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 	ImageIcon[] card = new ImageIcon[] { new ImageIcon("./image/red.jpg"), new ImageIcon("./image/blue.jpg"), new ImageIcon("./image/yellow.jpg"), new ImageIcon("./image/green.jpg") };
 
 	JPanel buttonPanel = new JPanel(new GridLayout(4, 6, 20, 20));
-	
-	String[] penalty = new String[] 
-			{ "생각하는 의지로 10초 버티기", 
-					"벌칙자:피리불기 왼쪽사람:뱀 역할극",
-					"모르는 사람한테 '나 이뻐?' 물어보기",
-					"칠판에 만세 따라그리기",
-					"눈물셀카찍기",
-					"개다리춤추기",
-					"곰 세마리 노래로 랩하기",
-					"모델걸음+무표정",
-					"대걸레잡고 섹시포즈",
-					"퉁퉁이 성대모사하기",
-					"담임선생님 허그하기",
-					"대걸레 잡고 노래부르기",
-					"복도에서 인어공주포즈",
-					"세번 절하기",
-					"플랭크 10초동안 하기",
-					"김연아의 트리플악셀",
-					"간지럼피기",
-					"코끼리코 10바퀴 돌고 앞에 사람보고 고백하기",
-					"빗자루로 기타치기",
-					"빗자루타고 '아이캔플라이'외치기",
-					"세일러문 등장 따라하기",
-					"다음 게임 흑기사 해주기",
-					"소원 하나씩 이루어주기",
-					"가마 태우기"
-			};
-	
+
 	public GameStartFrame() {
 		super(900, 900, "게임 시작");
 		int playersNum = SetPlayerFrame.playersNum;
-		
+
 		this.setBounds(mainButton, 350, 500, 200, 100, 255, 255, 255);
 		this.setBounds(penaltyLabel, 0, 300, 900, 100, 255, 255, 255);
 		penaltyLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -85,7 +65,7 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 			for(int i = 0; i < playersNum; i++)
 				playerButton[i].setLocation((i + 1) * 180, 7);
 		}
-		
+
 		if(playersNum == 4) {
 			playerButton[2].setBackground(new Color(255, 255, 0));
 			playerButton[3].setBackground(new Color(0, 255, 0));
@@ -101,10 +81,27 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 		titleLabel.setIcon(new ImageIcon("./image/titleLabel.jpg"));
 
 		add(this.setBounds(buttonPanel, 0, 60, 900, 800, 0, 102, 0));
-		
+
 		Random rd = new Random();
+
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("image/penalty.txt"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		String str;
+		try {
+			while ((str = reader.readLine()) != null) {
+				penaltyArr.add(str);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		holePenalty = rd.nextInt(24);
-		
+
 		for(int i = 0; i < 24; i++) {
 			holeButtons[i] = new JButton(""); //이미 선택한 구멍과 선택하지 않은 구멍 차이점 ('-' 유무)
 			buttonPanel.add(holeButtons[i]);
@@ -130,11 +127,11 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 						TimerFrame.gameClip.close();
 						penaltyClip = Audio("./image/penalty.wav", penaltyClip);
 						for(int j = 0; j < playerButton.length; j++) playerButton[j].setVisible(false);
-						JOptionPane.showMessageDialog(null, penalty[holePenalty] + "을(를) 수행해주세요.");
+						JOptionPane.showMessageDialog(null, penaltyArr.get(holePenalty) + "을(를) 수행해주세요.");
 						for(int j = 0; j < 24; j++) holeButtons[j].setVisible(false);
 						//https://heaven0713.tistory.com/28 (라벨 \n 사용하기)
 						penaltyLabel.setVisible(true);
-						penaltyLabel.setText(("<html><body><center>" + SetPlayerFrame.playerNameAdd.get(start - 1) + "님은 오늘의 주인공! <br><br>" + penalty[holePenalty] + "을(를) 수행해주세요.</center></body></html>"));
+						penaltyLabel.setText(("<html><body><center>" + SetPlayerFrame.playerNameAdd.get(start - 1) + "님은 오늘의 주인공! <br><br>" + penaltyArr.get(holePenalty) + "을(를) 수행해주세요.</center></body></html>"));
 						titleLabel.setBounds(0, 0, 900, 900);
 						mainButton.setVisible(true);
 						mainButton.addActionListener(new ActionListener() {
@@ -156,6 +153,6 @@ public class GameStartFrame extends CommonFrame implements ActionListener {
 						else { playerButton[0].setBorder(new LineBorder(Color.black, 7)); start = 1; } //마지막 순서일 경우
 				} //이미 선택한 구멍과 선택하지 않은 구멍 차이점 ('-' 유무)
 	}
-	
-	
+
+
 }
