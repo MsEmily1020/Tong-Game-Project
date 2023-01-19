@@ -33,6 +33,9 @@ public class SetPlayerFrame extends CommonFrame {
 
 	public SetPlayerFrame() {
 		super(900, 900, "플레이어설정");
+		playerNameAdd.clear();
+		playersNum = 0;
+		
 		//플레이어 입력창
 		textField.setHorizontalAlignment(JTextField.CENTER);
 		add(this.setBounds(textField, 200, 230, 500, 300, 255, 255, 255));
