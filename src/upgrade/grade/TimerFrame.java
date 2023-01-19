@@ -25,11 +25,6 @@ public class TimerFrame extends CommonFrame {
 		label.setBounds(0, 0, 900, 900);
 		add(label);
 
-		setVisible(true);
-		setSize(900, 900);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(2);
-
 		//https://ridd-coding.tistory.com/74
 		Timer time = new Timer();
 		TimerTask task = new TimerTask() {
